@@ -1,0 +1,13 @@
+*.asv
+*.data
+*.mat
+*.mexglx
+*.fig
+*.pdb
+*.pdf
+*.eps
+*.xml
+*.mexw64
+*~
+*#
+.Rhistory
