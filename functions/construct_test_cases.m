@@ -1,5 +1,5 @@
-function test_cases = construct_test_cases(Nbps, type_mod, dB_inv_sigma2, d, nu, M, verbose)
-%   test_cases = construct_test_cases(Nbps, type_mod, dB_inv_sigma2, d, nu, M)
+function test_cases = construct_test_cases(Nbps, type_mod, dB_inv_sigma2, d, nu, K, theta, M, verbose)
+%   test_cases = construct_test_cases(Nbps, type_mod, dB_inv_sigma2, d, nu, K, theta, M)
 %   Construct a structure array for the test cases for the QAP simulation,
 %   where the parameter setting is a cartesian product of the input
 %   arguments.
@@ -10,6 +10,8 @@ function test_cases = construct_test_cases(Nbps, type_mod, dB_inv_sigma2, d, nu,
 %       dB_inv_sigma2:  n_sigma2-by-1 vector, all 1/sigma2 in dB
 %       d:              n_d-by-1 vector, the distance between S-R and R-D
 %       nu:             Scalar, the pathloss factor
+%       K:              Scalar, the Rician coefficient
+%       theta:          Scalar, the phase of the LOS
 %       M:              Scalar, the total number of retransmissions
 %	Outputs:
 %       test_cases:     (n_d*n_Pr*n_sigma2)-by-1 structure, each test case
@@ -52,6 +54,8 @@ for i_d = 1 : n_d
         test_cases(i_case).param_origin.dB_inv_sigma2 = dB_inv_sigma2(i_sigma2);
         test_cases(i_case).param_origin.d = d(i_d);
         test_cases(i_case).param_origin.nu = nu;
+        test_cases(i_case).param_origin.K = K;
+        test_cases(i_case).param_origin.theta = theta;
         test_cases(i_case).param_origin.M = M;
 
         % The derived parameters
@@ -63,7 +67,7 @@ for i_d = 1 : n_d
         % Compute the updating matrix. We assume that the simulation 
         % settings are stationary across transmissions. Saved as a 
         % Q-by-Q matrix
-        test_cases(i_case).param_derived.E = get_factor_PEP_update(dist_sqr, beta(i_d), sigma_sqr(i_sigma2)); % Get this thing fully vectorized
+        test_cases(i_case).param_derived.E = get_factor_PEP_update(dist_sqr, beta(i_d), K, sigma_sqr(i_sigma2)); % Get this thing fully vectorized
 
         if verbose
             toc;

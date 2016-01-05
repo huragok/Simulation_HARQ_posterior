@@ -5,8 +5,9 @@ clc;
 addpath('functions');
 
 %% 1. Simulation settings
+% Rayleigh fading (K = 0)
 % 64QAM
-load('./Test_201614185534739.mat');
+% load('./Test_201614185534739.mat'); 
 % Non-block fading
 % n_df = 2400 / 6;
 % dB_inv_sigma2 = -4.7; % 9.4, 1.6, -2.4, -4.7
@@ -14,10 +15,37 @@ load('./Test_201614185534739.mat');
 % max_frame = 50;
 
 % pure block fading
-n_df = 1;
-dB_inv_sigma2 = -5.2; % 8.3, 0.6, -3.2, -5.2
+% n_df = 1;
+% dB_inv_sigma2 = -5.2; % 8.3, 0.6, -3.2, -5.2
+% N = 4; % 1, 2, 3, 4
+% max_frame = 20000;
+
+% 100 RB
+% n_df = 100;
+% dB_inv_sigma2 = -4.7; % 9.4, 1.6, -2.5, -4.7
+% N = 4; % 1, 2, 3, 4
+% max_frame = 200;
+
+% 10 RB
+% n_df = 10;
+% dB_inv_sigma2 = -4.7; % 9.2, 1.5, -2.5, -4.7
+% N = 4; % 1, 2, 3, 4
+% max_frame = 2000;
+
+% Rician fading (K = 1)
+% 64QAM
+load('./Test_201615105053572.mat'); 
+% Non-block fading
+n_df = 2400 / 6;
+dB_inv_sigma2 = -5.05; % 8.8, 1, -2.85, -5.05
 N = 4; % 1, 2, 3, 4
-max_frame = 20000;
+max_frame = 50;
+
+% pure block fading
+% n_df = 1;
+% dB_inv_sigma2 = -5.2; % 8.3, 0.6, -3.2, -5.2
+% N = 4; % 1, 2, 3, 4
+% max_frame = 20000;
 
 % 100 RB
 % n_df = 100;
@@ -35,6 +63,8 @@ Nbps = test_cases(1).param_origin.Nbps;
 type_mod = test_cases(1).param_origin.type_mod;
 d = test_cases(1).param_origin.d; % Distance between S and R, R and D
 nu = test_cases(1).param_origin.nu; % Pathloss factor
+K = test_cases(1).param_origin.K;
+theta = test_cases(1).param_origin.theta;
 M = test_cases(1).param_origin.M; % Total number of transmissions
 
 
@@ -55,7 +85,7 @@ map  = [1 : Q; test_cases(1).map];
 sigma2 = 10 .^ (-dB_inv_sigma2 / 10); % The noise covariance at all nodes
 
 %% 3. Generate the channel samples corresponding to the successful transmission and the failed transmissions
-[h_success, v_success, h_failure, v_failure] = get_channel_noise_samples(N, constellation, map, beta, sigma2, max_frame, iter_max, coding_rate, nldpc, seed, n_df);
+[h_success, v_success, h_failure, v_failure] = get_channel_noise_samples(N, constellation, map, beta, K, theta, sigma2, max_frame, iter_max, coding_rate, nldpc, seed, n_df);
 
 %% 4. Visualization, plot the mean and covaraince matrix
 points_success_channel = [real(h_success), imag(h_success)];
@@ -129,6 +159,8 @@ channel_samples = doc.getDocumentElement;
 channel_samples.setAttribute('nSuccess', num2str(size(h_success, 1)));
 channel_samples.setAttribute('nFailure', num2str(size(h_failure, 1)));
 channel_samples.setAttribute('beta', num2str(beta));
+channel_samples.setAttribute('K', num2str(K));
+channel_samples.setAttribute('theta', num2str(theta));
 channel_samples.setAttribute('N', num2str(N));
 channel_samples.setAttribute('Nprb', num2str(n_df));
 channel_samples.setAttribute('sigma2', num2str(sigma2));

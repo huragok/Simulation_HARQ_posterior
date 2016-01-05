@@ -15,6 +15,8 @@ dB_inv_sigma2 = [-2 : 1.5 : 10]; % 1/sigma2 in dB, 64 QAM
 d = 0.5; % Distance between S and R, R and D
 
 nu = 3; % Pathloss factor
+K = 1;
+theta = 0;
 % We set M = 2, since for lar Number of retransmission
 
 N_batch = 5; % Number of batches,
@@ -38,7 +40,7 @@ n_sigma2 = length(dB_inv_sigma2);
 
 
 beta = d.^ -nu; % n_d-by-1 vector
-
+h_mean = sqrt(beta * K / (K + 1)) * exp(theta * 1j);
 
 dist_sqr0 = abs(constellation(p0 + 1) - constellation(q0 + 1)) ^ 2;
 dist_sqr1 = abs(constellation(p1 + 1) - constellation(q1 + 1)) ^ 2;
@@ -52,10 +54,10 @@ rng(seed);
 
 for i_batch = 1 : N_batch
     % generate the random channels for the first transmission
-    delta1_0 = abs(sqrt(beta / 2) * (randn(1, N_per_batch) + 1i * randn(1, N_per_batch))) .^ 2;
+    delta1_0 = abs(h_mean + sqrt(beta / 2 / (K + 1)) * (randn(1, N_per_batch) + 1i * randn(1, N_per_batch))) .^ 2;
     
     % generate the random channels for the first retransmission
-    delta1_1 = abs(sqrt(beta / 2) * (randn(1, N_per_batch) + 1i * randn(1, N_per_batch))) .^ 2;
+    delta1_1 = abs(h_mean + sqrt(beta / 2 / (K + 1)) * (randn(1, N_per_batch) + 1i * randn(1, N_per_batch))) .^ 2;
    
     for i_sigma2 = 1 : n_sigma2
         tmp0 = delta1_0 ./ sigma2(i_sigma2);
@@ -67,15 +69,15 @@ for i_batch = 1 : N_batch
         
         pep_chernoff_approx(i_sigma2) =...
         pep_chernoff_approx(i_sigma2) +...
-        0.5 * get_factor_PEP_update_param(dist_sqr0, beta, sigma2(i_sigma2), 4)...
-            * get_factor_PEP_update_param(dist_sqr1, beta, sigma2(i_sigma2), 4);
+        0.5 * get_factor_PEP_update_param(dist_sqr0, beta, K, sigma2(i_sigma2), 4)...
+            * get_factor_PEP_update_param(dist_sqr1, beta, K, sigma2(i_sigma2), 4);
         
         pep_doubleexp_approx(i_sigma2) =...
         pep_doubleexp_approx(i_sigma2) +...
-        1 / 12 * get_factor_PEP_update_param(dist_sqr0, beta, sigma2(i_sigma2), 4)...
-               * get_factor_PEP_update_param(dist_sqr1, beta, sigma2(i_sigma2), 4)...
-        +1 / 4 * get_factor_PEP_update_param(dist_sqr0, beta, sigma2(i_sigma2), 3)...
-               * get_factor_PEP_update_param(dist_sqr1, beta, sigma2(i_sigma2), 3);
+        1 / 12 * get_factor_PEP_update_param(dist_sqr0, beta, K, sigma2(i_sigma2), 4)...
+               * get_factor_PEP_update_param(dist_sqr1, beta, K, sigma2(i_sigma2), 4)...
+        +1 / 4 * get_factor_PEP_update_param(dist_sqr0, beta, K, sigma2(i_sigma2), 3)...
+               * get_factor_PEP_update_param(dist_sqr1, beta, K, sigma2(i_sigma2), 3);
     end
 end
 

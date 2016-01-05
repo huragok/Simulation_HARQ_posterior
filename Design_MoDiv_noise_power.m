@@ -16,6 +16,9 @@ type_mod = 'QAM';
 dB_inv_sigma2 = [0]; % 1/sigma2 in dB
 d = 0.5; % Distance between S and R, R and D
 
+K = 1; % The Rician coefficients
+theta = 0; % The phase of the LOS component
+
 nu = 3; % Pathloss factor
 M = 5; % Number of retransmission
 
@@ -23,7 +26,7 @@ epsilon = 0.01; % Tolerance to control the error of scaling the 2 cost matrices 
 n_itr = 1000000; % Number of iterations for the tabu QAP solver
 
 %% 2. Initialization: generate and save all test cases
-test_cases = construct_test_cases(Nbps, type_mod, dB_inv_sigma2, d, nu, M, true);
+test_cases = construct_test_cases(Nbps, type_mod, dB_inv_sigma2, d, nu, K, theta, M, true);
 n_case = length(test_cases);
 time_step = regexprep(num2str(clock),'[^\w'']',''); % The time step used to label all saved files as a suffix
 

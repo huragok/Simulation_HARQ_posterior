@@ -1,4 +1,4 @@
-function [h_success, v_success, h_failure, v_failure] = get_channel_noise_samples(N, constellation, map, beta, sigma_sqr, max_frame, iter_max, coding_rate, nldpc, seed, n_df)
+function [h_success, v_success, h_failure, v_failure] = get_channel_noise_samples(N, constellation, map, beta, K, theta, sigma_sqr, max_frame, iter_max, coding_rate, nldpc, seed, n_df)
 %   [h_success, v_success, h_failure, v_failure] = get_channel_noise_samples(N, constellation, map, beta, sigma_sqr, max_frame, iter_max, coding_rate, nldpc, seed, n_df)
 %   Generate the samples of channels and noises corresponding to the
 %   successful packet transmissions and the failed packet transmissions.
@@ -11,6 +11,8 @@ function [h_success, v_success, h_failure, v_failure] = get_channel_noise_sample
 %       constellation:	Q-by-1 vector, the modulated constellations
 %       map:            M-by-Q vector, the mapping at each transmission
 %       beta:           Scalar, the variance of the Rayleigh channel
+%       K:
+%       theta:
 %       sigma_sqr:      Scalar, the variance of AWGN noise at the
 %                       destination
 %       max_frame:      Scalar, number of LDPC frames in simulation.
@@ -69,6 +71,7 @@ v_success = zeros(0, N);
 h_failure = zeros(0, N);
 v_failure = zeros(0, N);
 
+h_mean = sqrt(beta * K / (K + 1)) * exp(theta * 1j);
 for i = 1 : max_frame
 	if mod(i, 5)==0 % Print a 'x' for every 5 frames
 		fprintf('x');
@@ -93,7 +96,7 @@ for i = 1 : max_frame
 	y = zeros(N, numSymbol); % The received signal at each (re)transmission
     % Generate the channels. Assume channel to be independently fading
     % across symbols
-    h_unique = sqrt(beta / 2) * (randn(N, n_df) + 1i * randn(N, n_df)); % Generate the Rayleigh channel, We expect N to be large so inorder to cut memory usage we generate the random channel/noise once for each transmission
+    h_unique = h_mean + sqrt(beta / 2 / (K + 1)) * (randn(N, n_df) + 1i * randn(N, n_df)); % Generate the Rayleigh channel, We expect N to be large so inorder to cut memory usage we generate the random channel/noise once for each transmission
     v = sqrt(sigma_sqr / 2) * (randn(N, numSymbol) + 1i * randn(N, numSymbol)); % Noise samples at the relay
     
     n_rep = numSymbol / n_df;
