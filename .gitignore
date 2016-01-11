@@ -7,7 +7,11 @@
 *.pdf
 *.eps
 *.xml
+tmp
 *.mexw64
 *~
 *#
 .Rhistory
+.metadata
+
+

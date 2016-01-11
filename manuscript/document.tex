@@ -1,0 +1,797 @@
+
+%% bare_jrnl.tex
+%% V1.4a
+%% 2014/09/17
+%% by Michael Shell
+%% see http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.8a or later) with an IEEE
+%% journal paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%
+%% File list of work: IEEEtran.cls, IEEEtran_HOWTO.pdf, bare_adv.tex,
+%%                    bare_conf.tex, bare_jrnl.tex, bare_conf_compsoc.tex,
+%%                    bare_jrnl_compsoc.tex, bare_jrnl_transmag.tex
+%%*************************************************************************
+
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. IEEE's font choices and paper sizes can       ***
+% *** trigger bugs that do not appear when using other class files.       ***                          ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+
+\documentclass[journal,draftcls,onecolumn,12pt,twoside]{IEEEtran}
+
+
+\usepackage{amsmath,graphicx}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{amsthm}
+\newtheorem{proposition}{Proposition}
+\usepackage{color}
+\usepackage{multirow}
+\newcommand{\tred}{\color{red}}
+% correct bad hyphenation here
+\hyphenation{}
+
+
+\begin{document}
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{On the Impact of HARQ feedback}
+%
+%
+% author names and IEEE memberships
+% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+% a structure at a ~ so this keeps an author's name from being broken across
+% two lines.
+% use \thanks{} to gain access to the first footnote area
+% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+% was not built to handle multiple paragraphs
+%
+
+\author{
+  Wenhao Wu,~\IEEEmembership{Student Member,~IEEE,}
+  Hans Mittelmann,
+  Zhi Ding,~\IEEEmembership{Fellow,~IEEE}
+}
+
+% make the title area
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\begin{abstract}
+  In response to a comment on one of our manuscript, this work studies the
+  posteior channel and noise distributions conditioned on the NACKs and ACKs of
+  all previous transmissions in HARQ system with statistical approaches. Our main
+  result is that, unless the coherence interval (time or frequency) is large as
+  in block-fading assumption, the posterior distribution of the channel and
+  noise either remains almost identical to the prior distribution, or it
+  follows the same class of distribution as the prior one. In the latter case,
+  the difference between the posterior and prior distribution can be modeled as
+  some parameter mismatch, which has little impact on certain type of
+  applications.
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+  Modulation diversity, 2-way relay, HARQ, QAP.
+\end{IEEEkeywords}
+
+
+
+
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+\label{sec:intro}
+In our recent manuscript~\cite{wu2015modulation}, we studied the Modulation
+Diversity (MoDiv) design problem for Hybrid Automatic Repeat reQuest (HARQ)
+Chase-Combining (CC) protocol. In this work, we approximate the bit
+error rate (BER) based on prior fading channel and noise distributions after
+each round of (re)transmission. One would argue that the need for the
+$m$-th (re)transmission implies that all previous transmissions have failed,
+thus the posterior channel and noise distribution would no longer be the same as
+the prior distribution. Consequently, it is natural to wonder when and how the
+posterior information, namely HARQ NACKs/ACKs, affects the channel and noise
+distribution.
+
+There are a few works highlighting this difference between the priori and
+the posteriori
+distributions~\cite{gu2006modeling}\cite{long2012analysis}\cite{alkurd2015modeling},
+suggesting that adopting the prior distribution may lead to an overoptimistic
+estimation on the performance of HARQ.
+On the other hand, there are also abundant works about HARQ in fading channels
+that do not consider the posterior distribution, such as constellation
+rearrangement~\cite{harvind2005symbol}, power
+allocation~\cite{chaitanya2014adaptive}, rate selection~\cite{jin2011optimal}
+and so forth. As far as we know, it remains an open question
+under what conditions it is suitable or not to exploit the posterior distribution.
+
+In this work, we study the posterior distribution of fading channels and noises
+in a practical LDPC-coded HARQ system under the general a priori assumptions of
+Rician fading channel and circularly symmetric complex Gaussian (CSCG)
+additive noises. By analyzing the posterior distribution with a series of three
+hypothesis tests on numerically generated channel and noise samples, we
+demonstrate that the posterior distribution may not significantly differ from
+the prior one, especially when each HARQ packet, or transport block (TB) in LTE
+terminology, experiences a few independent fading channel instances. 
+Moreover, even when the coherence interval is large so that the instances of
+fading channels corresponding to each TB are more correlated, the posterior
+distribution may still follow the same type of distribution as the prior one
+except for some differences in parameters. This minor difference has negligible
+impact on specific applications such as modulation diversity (MoDiv)
+design~\cite{}. To the best of our knowledge, the statistical approaches taken
+by this work to study the posterior fading channel and noise
+distribution in HARQ systems has not been reported in existing literature.
+
+The rest of the paper is organized as follows:
+Section~\ref{sec:backgrounds} discusses a few
+practical considerations why it may not be proper to adopt the posterior
+distribution in the studies of HARQ system. Section~\ref{sec:model_data}
+describes our system model and how we generate the fading channel/noise samples
+corresponding to the posterior distribution for our hypothesis tests.
+In Section~\ref{sec:tests}, we construct three hypothesis tests to analyze the
+posterior fading channel/noise distribution. The numerical results are provided
+in Section~\ref{sec:numerical}. Finally, Section~\ref{sec:conclusion} concludes
+this work.
+
+% needed in second column of first page if using \IEEEpubid
+%\IEEEpubidadjcol
+
+\section{Backgrounds}
+\label{sec:backgrounds}
+
+One apparent reason why posterior distribution is not preferable is about
+feasibility, as a posterior analysis for HARQ system is usually too difficult
+unless one rely on some very restrictive, less practical settings and
+assumptions. For instance, \cite{gu2006modeling} characterize the failure of
+transmissions with effective SNR and rate criteria, which on its own is a
+simplication and only numerical results are presented. Considering PAM
+constellations and maximum ratio combining (MRC),
+\cite{long2012analysis}\cite{alkurd2015modeling} attempts to explicitly
+formulate the error probability. However, the error probability based on $Q$
+function is an approximation, especially for practical high-order QAM
+modulations, and their analysis is based on instantaneous CSI and does not scale
+well for large number of retransmissions. In practice, a transmission failure is
+declared by the cyclic redundancy check (CRC) when an error in the forward error
+correction (FEC) decoding result is detected. Such a complex event is difficult
+to characterize, let alone deriving a posterior channel distribution from it.
+
+There is one questionable assumption common to all these works making use of
+posterior information NACKs/ACKs. The channel corresponding to a TB is always
+characterized by a single scalar effective SNR value, i.e. the entire TB
+experience a single instance of the fading channel and/or additive noise. As a
+practical example, in LTE system, each TB can be mapped to a maximum of 110
+resource blocks (RB) of 0.5ms$\times$180kHz~\cite[Table 7.1.7.2.1-1]{ts36.213}.
+In the propagation condition~\cite[Table B.2-3]{ts36.141}, the coherence time
+could be as small as $\tau_c\approx 1 / (4 \times 300\mbox{Hz}) =
+0.833\mbox{ms}$ and the coherence bandwidth could be $B_c\approx 1 / (2 \times
+5000\mbox{ns}) = 100\mbox{kHz}$~\cite[Table 2.1]{tse2005fundamentals}.
+Consequently, each RB roughly experiences independent fading components and the
+univariate fading/noise instance per TB assumption is not satisfied. On the
+other hand, if each TB experiences $N_{IF}$ independent fading channel
+instances, then the posterior channel/noise distribution should be defined over
+$\mathcal{O}(m\times N_{IF})$ complex variables, which easily becomes
+intractable.
+
+The generalization from the abovementioned restrictive settings and assumptions,
+which facilitates a posterior analysis for HARQ, leads to the
+second---more essential but less obvious---reason why posterior distribution is
+not always worthy of exploiting: necessity. In the rest part of this work, we
+will demonstrate that, in a more general and practical HARQ system, the
+posterior channel and noise distributions may not differ significantly from the
+prior ones, or the difference in distributions is too little to have visible
+impact on certain applications.
+
+\section{System Model and Data Generation}
+\label{sec:model_data}
+
+\subsection{Notations}
+\label{subsec:notation}
+We adopt the following notations throughout this work. $\Re\{\cdot\}$ and
+$\Im\{\cdot\}$ represent the real and imaginary part of a complex matrix,
+respectively. $[\mathbf{A};\mathbf{B}]$ and $[\mathbf{A},\mathbf{B}]$ represent
+vertical and horizontal concatenation of matrix $\mathbf{A}$ and $\mathbf{B}$,
+respectively. Multivariate Gaussian distribution, 
+multivariate CSCG distribution and chi-squared distribution with $d$
+degree-of-freedom are denoted with $\mathcal{N}(\cdot)$, $\mathcal{CN}(\cdot)$
+and $\chi_d^2$ respectively. $\mathbf{0}_l$, $\mathbf{1}_l$ and $\mathbf{I}_l$ denote the
+$l$-dimensional all-0 vectors, $l$-dimensional all-1 vectors and
+$l$-by-$l$-dimensional identity matrix. $|\cdot|$ and $\|\cdot\|_F$ represent
+the deterministic and Frobenius norm of a matrix.
+
+\subsection{System Model}
+\label{subsec:model}
+We consider a simple Type-I HARQ system with Chase Combining (CC) under Rician
+fading channel and additive CSCG noise assumption. The received signal of the
+$m$-th retransmission ($m=0$ represents the original transmission) is
+\begin{equation}
+  y^{(m)} = h^{(m)}s^{(m)} + n^{(m)}, \quad
+\end{equation}
+where $s^{(m)}$ is the transmitted symbols and
+$n^{(m)}\sim\mathcal{CN}(0,\sigma^2)$ is the noise. The Rician channel can be
+modeled as~\cite{}
+\begin{align}
+    h^{(m)} = \sqrt{\frac{K}{K+1}\beta}e^{j\theta} +
+    \sqrt{\frac{1}{K+1}}\mathcal{CN}(0,\beta)
+\end{align}
+where $K$ is the Rician factor, $\beta$ is the mean power, and $\theta$ is the
+line-of-sight (LOS) component. We also assume that $n^{(m)}$ is independent
+across different samples and $h^{(m)}$ is independent across different
+(re)transmissions. Assuming all previous $m$ decoding attempt have failed,
+after the $m$-th retransmission, the receiver makes another decoding attempt by
+combining the $m + 1$ TBs received so far using a maximum likelihood (ML)
+detector, until $m > M$ where the HARQ transmission fails.
+
+\subsection{Data Generation}
+To analyze the posterior distribution of the fading channels and
+noises, we generate the channel/noise samples with a LDPC-coded
+system~\cite{}. We assume that each TB contains 1 complete LDPC frame. Another
+tuning parameter, namely the number of independent fading channels per TB denoted as $N_{IF}$, is added
+to this system in order to test the impact of coherence interval on the
+posterior distribution. As shown in Fig.~\ref{fig:model}, for different $m$, we
+randomly generate a set of LDPC sessions, each consists of a encoding bit sequence and the
+fading channel/noise samples corresponding to the $(m+1)$ TBs. The LDPC-decoder
+then classify the LDPC sessions into two subsets based on whether the receiver
+sends a NACK (decoding failure) or ACK (decoding success), which represent the
+two posterior distributions we are interested in. 
+
+Within each TB, the $N_{IF}$ independent fading
+channel instances are periodically mapped to the $L_s$ symbols. Among the $L_s$
+noise samples, we randomly sample $N_{IF}$ in such a manner that the
+corresponding channel samples represent the $N_{IF}$ independent fading
+channel instances completely. In this way we make sure that the number of
+channel samples and that of the noise samples are the same. Consequently, within
+each failed HARQ session, a total number of $(m+1)\times N_{IF}$ groups of
+fading channels/noises are sampled. This groups of samples are then zipped across the
+$(m+1)$ (re)transmissions to construct $N_{IF}$ records, each represented as a
+$2(m+1)$-dimensional complex vector, or equivalently a $4(m+1)$-dimensional
+real vector, in the form of
+\begin{align}
+  \mathbf{x} = \left[\Re\{\mathbf{h}^{(m)}\}; \Im\{\mathbf{h}^{(m)}\}; 
+  \Re\{\mathbf{n}^{(m)}\}; \Im\{\mathbf{n}^{(m)}\}\right]
+\end{align} 
+
+In the next section, we carry out our hypothesis tests over a dataset of $n$
+records of $\mathbf{x}$, which is organized into a  $4(m+1)$-by-$n$ matrix
+$\mathbf{X} = [\mathbf{x}_1, \ldots, \mathbf{x}_n]$. For notational convenience
+we also decompose $X$ into four $(m+1)$-by-$n$ block matrices, i.e.
+$\mathbf{X} = [\mathbf{X}_{h,R}; \mathbf{X}_{h,I}; \mathbf{X}_{n, R};
+\mathbf{X}_{n, I}]$, which represent the real and imaginary part of the channel
+and noise samples, respectively.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=4.0in]{./figs/data.eps}
+  \caption{The generation of datasets for the analysis on the posterior
+  distribution of the fading channels and noises.}
+  \label{fig:model}
+\end{figure}
+
+\section{Design of Hypothesis Tests}
+\label{sec:tests}
+In this section, we construct a series of three binary hypothesis tests to see
+whether and on what conditions there is a significant difference between the posterior
+joint distribution of the fading channel and noise and the prior one. The first
+test examines whether the posterior data and noise samples follow the same
+general type of distributions as the Rician channel and CSCG noise, i.e. whether
+$\mathbf{x}$ follows Multi-Variate Normal (MVN) distribution. Once the MVN
+distribution is verified, the likelihood of $\mathbf{X}$ can be evaluated,
+therefore a second test could further verify whether the distribution of
+$\mathbf{x}$ is exactly the same as the prior distribution, i.e. whether the MVN
+parameters such as the mean and covariance matches those defined for the prior
+distribution. Should the second test fail, we fall back to a third test, which
+checks whether the distribution of $\mathbf{x}$ suggests that the channel
+and noise still agree with the i.i.d Rician fading model and CSCG model,
+respectively, though with potentially different parameters $\sigma^2$, $K$,
+$\beta$ and $\theta$ as the prior distribution. If so, the ML estimation of
+these four parameters could provide some insight into the difference between the
+posterior and prior distributions. These three hypothesis tests are detailed as
+follows.
+
+\subsection{Test 1: Multi-Variate Normality (MVN) Test}
+The first test is literally defined as:
+\begin{align}
+  \mbox{(Test 1) } \begin{array}{ll}H_0: & \mathbf{x}\mbox{ follows MVN
+  distribution.} \\ H_1: & \mbox{Otherwise.} \end{array}
+\end{align}
+Here we do not make any assumptions on the mean and covariance matrix of
+$\mathbf{x}$. As there are a wide variety of MVN tests with different
+characteristics~\cite{mecklin2005monte} which may well reach contradictory
+conslusions over a same dataset, we adopt the the R package
+`MVN'~\cite{korkmaz2014mvn} which in turn implements three popular MVN tests,
+namely Mardia's test, Henze-Zirkler(HZ)'s test and Royston's test.
+
+\subsection{Test 2: Parameter Matching Test}
+If Test 1 accept the null hypothesis $H_0$, we can
+perform a second test to see whether $\mathbf{x}$ is identically distributed as
+the prior assumption. Specifically, assuming that $\mathbf{x}$ is MVN distributed,
+\begin{align}
+  \mbox{(Test 2) } \begin{array}{ll}H_0: & \mathbf{x}\sim
+  \mathcal{N}(\bm{\mu}_0, \mathbf{\Sigma}_0) \\ H_1: &
+  \mbox{Otherwise.}
+  \end{array}
+\end{align}
+where
+\begin{subequations}
+  \begin{align}
+    \bm{\mu}_0 & =
+    \left[\sqrt{\frac{K}{K+1}\beta}\cos\theta\mathbf{1}_{(m+1)};
+    \sqrt{\frac{K}{K+1}\beta}\sin\theta\mathbf{1}_{(m+1)};
+    \mathbf{0}_{2(m+1)}\right]
+    \\
+    \mathbf{\Sigma}_0 & =
+    \mbox{diag}\left(\frac{\beta}{2(K+1)}\mathbf{1}_{2(m+1)},
+    \frac{\sigma^2}{2}\mathbf{1}_{2(m+1)}\right) 
+  \end{align}.
+  \label{eq:mu0Sigma0}
+\end{subequations}
+
+
+The following proposition reduces Test 2 into a chi-squared test:
+\begin{proposition}
+  \label{prop:test2}
+  Test 2 is equivalent to the following hypothesis test:
+  \begin{align}
+    \mbox{(Test 2(W)) } \begin{array}{ll}H_0: & -2\ln(\Lambda_2) \sim
+    \chi_{2(m+1)(4m+7)}^2 \\ H_1: & \mbox{Otherwise.}
+    \end{array}
+  \end{align}
+  as $n\rightarrow\infty$, where
+  \begin{align}
+    -2\ln(\Lambda_2) & =
+    2n(m+1)\ln\left(\frac{\beta\sigma^2}{4(K+1)}\right)
+    +
+    \frac{2(K+1)(\|\mathbf{X}_{h,R}\|_F^2 + \|\mathbf{X}_{h,I}\|_F^2)}{\beta}
+    \notag \\ &+
+    \frac{2(\|\mathbf{X}_{n,R}\|_F^2 + \|\mathbf{X}_{n,I}\|_F^2)}{\sigma^2}
+    - n\ln|\hat{\mathbf{\Sigma}}| - 4n(m+1)\\
+    \hat{\mathbf{\Sigma}} & = \frac{1}{n}(\mathbf{X}
+    -\hat{\bm{\mu}}\mathbf{1}_n^T)(\mathbf{X}
+    -\hat{\bm{\mu}}\mathbf{1}_n^T)^T,\;\hat{\bm{\mu}} =
+    \frac{1}{n}\mathbf{X}\mathbf{1}_n,\label{eq:sigma_mu_ml}
+  \end{align}
+  in which $\hat{\bm{\Sigma}}$, $\hat{\bm{\mu}}$ are the ML estimation of the
+  covariance matrix and mean of $\mathbf{x}$ from $\mathbf{X}$, respectively.
+\end{proposition}
+\begin{proof}
+  See Appendix.
+\end{proof}
+
+\subsection{Test 3: Relaxed Parameter Matching Test}
+If Test 1 suggests that $\mathbf{x}$ follows MVN
+distribution, but Test 2 suggests that it is not identical to
+the prior distribution, one would wonder whether the distribution of
+$\mathbf{x}$ is still in a manageable form. A natural ``guess'' is that in this
+posterior distribution, the channels and noises across the $(m+1)$
+(re)transmissions are still i.i.d Rician fading and CSCG distributed,
+respectively, except that the parameters $\sigma^2$, $K$, $\beta$ and $\theta$
+are different from the prior distribution. In that case, we can examine the
+ML estimation of these paramters to see how different they are
+from the prior assumption, and whether certain applications are robust against
+this parameter mismatch between the posterior and prior distribution. This test
+is formulated as follows:
+\begin{align}
+  \mbox{(Test 3) } \begin{array}{ll}H_0: & \mathbf{x}\sim
+  \mathcal{N}(\tilde{\bm{\mu}}_0, \tilde{\mathbf{\Sigma}}_0)
+  \\
+  H_1:
+  &
+  \mbox{Otherwise.}
+  \end{array}
+\end{align}
+where $\tilde{\bm{\mu}}_0$ and $\tilde{\mathbf{\Sigma}}_0$ are defined as in
+Eq.~\eqref{eq:mu0Sigma0} with $\sigma^2$, $K$, $\beta$, $\theta$ replaced by
+unknown parameters $\tilde{\sigma}^2$, $\tilde{K}$, $\tilde{\beta}$ and
+$\tilde{\theta}$, respectively.
+
+Similar to Proposition~\ref{prop:test2}, the following proposition reduces Test
+3 to a chi-squared test:
+\begin{proposition}
+  \label{prop:test3}
+  Test 3 is equivalent to the following hypothesis test:
+  \begin{align}
+    \mbox{(Test 3(W)) } \begin{array}{ll}H_0: & -2\ln(\Lambda_3) \sim
+    \chi_{2(m+1)(4m+7)-4}^2 \\ H_1: & \mbox{Otherwise.}
+    \end{array}
+  \end{align}
+  as $n\rightarrow\infty$, where
+  \begin{align}
+    -2\ln(\Lambda_3) & =
+    2n(m+1)\ln\left(\frac{\hat{\beta} \hat{\sigma}^2} {4(\hat{K}+1)}\right) -
+    n\ln|\hat{\mathbf{\Sigma}}|
+  \end{align}
+  in which
+  \begin{align}
+    \hat{\sigma}^2 = \frac{\|\mathbf{X}_{n,R}\|_F^2 +
+    \|\mathbf{X}_{n,I}\|_F^2}{n(m+1)} & ,\; 
+    \hat{K} = \frac{\mbox{mean}_{h,R}^2 + \mbox{mean}_{h,I}^2}{\mbox{var}_h},\;
+    \notag\\
+    \hat{\beta} = (\hat{K} + 1)\mbox{var}_h & ,\;
+    \hat{\theta} =
+    \arctan\frac{\mbox{mean}_{h,I}}{\mbox{mean}_{h,R}}, \label{eq:beta_sigma_ml}
+  \end{align}
+  are the ML estimation of $\tilde{\sigma}^2$, $\tilde{K}$, $\tilde{\beta}$ and
+  $\tilde{\theta}$, respectively. The sample mean of the real and imaginary part
+  and the sample variance of $h$ are evaluated as
+  \begin{align}
+    & \mbox{mean}_{h,R} =
+    \frac{\mathbf{1}_{m+1}^T\mathbf{X}_{h,R}\mathbf{1}_n} {n(m+1)} ,\;
+    \mbox{mean}_{h,I} = \frac{\mathbf{1}_{m+1}^T\mathbf{X}_{h,I}\mathbf{1}_n}
+    {n(m+1)},\notag \\
+    & \mbox{var}_h = \frac{\|\mathbf{X}_{h,R} -
+    \mbox{mean}_{h,R}\mathbf{1}_{m+1}\mathbf{1}_{n}^T\|_F^2 +
+    \|\mathbf{X}_{h,I} - \mbox{mean}_{h,I}\mathbf{1}_{m+1}\mathbf{1}_{n}^T\|_F^2}{n(m+1)}
+  \end{align}
+\end{proposition}
+\begin{proof}
+  See Appendix.
+\end{proof}
+
+\section{Numerical Results}
+\label{sec:numerical}
+
+\subsection{Simulation Settings}
+In our simulation, the Rician channel is specified with $\beta = 1$, $K = 1$ and
+$\theta = 0$. Each LDPC code word of length $L=2400$ is mapped to 64-QAM
+constellation with the same Gray mapping for all (re)transmissions, therefore
+each TB consists of $L_s = 400$ symbols. The posterior fading channel and noise
+distribution is analyzed at $N_{IF} = 400, 100, 10, 1$ and $m = 0, 1, 2, 3$. For
+each pair of $(N_{IF}, m)$, we choose $\sigma^2$ such that around 50\% of HARQ
+sessions fail and randomly generate $n\approx 10000$ records of $\mathbf{x}$
+for both the failed and successful sessions. % Shall we also consider the
+% success
+The detailed parameters for each dataset are listed in
+Table~\ref{tab:settings}.
+\begin{table}[!t]
+  \renewcommand{\arraystretch}{1.3}
+  \caption{Parameters for each numerically generated dataset.}
+  \label{tab:settings}
+  \centering
+  \begin{tabular}{c|ccccc}
+    \hline
+    Dataset & $N_{IF}$ & $m$ & $n_{F}$ & $n_{S}$ & $\sigma^2$ \\
+    \hline
+    1 & 400 & 0 &  & & \\
+    2 & 400 & 1 &  & & \\
+    3 & 400 & 2 &  & & \\
+    4 & 400 & 3 &  & & \\
+    \hline
+    5 & 100 & 0 &  & & \\
+    6 & 100 & 1 &  & & \\
+    7 & 100 & 2 &  & & \\
+    8 & 100 & 3 &  & & \\
+    \hline
+    9 & 10 & 0 &  & & \\
+    10 & 10 & 1 &  & & \\
+    11 & 10 & 2 &  & & \\
+    12 & 10 & 3 &  & & \\
+    \hline
+    13 & 1 & 0 & & & \\
+    14 & 1 & 1 & & & \\
+    15 & 1 & 2 & & & \\
+    16 & 1 & 3 & & & \\
+    \hline
+  \end{tabular}
+\end{table}
+  
+\subsection{Hypothesis Test Results}
+The $p$-values of Test 1 over all dataset are shown in Table~\ref{tab:test1}.
+For $N_{IF} = 1$, the posterior distribution indeed appears to be of different
+type from the prior distribution. However, for $N_{IF} = 10, 100, 400$, there is
+strong evidence indicating that the fading channels and noises still follow MVN
+distribution, this is especially true for larger $N_{IF}$ (100, 400) where all
+the three MVN tests support the null hypothesis.
+
+The $p$-values of Test 2 and Test 3 are shown in Table~\ref{tab:test23}. We
+also listed the ML estimation results $\hat{\sigma}^2, \hat{K},
+\hat{\beta}, \hat{\theta}^2$ from Test 3 in Table~\ref{tab:ML} in comparison
+with the prior parameters given in Table~\ref{tab:settings}. As we can see, for larger $N_{IF}$
+ (100, 400), Test 2 suggests that the posterior distribution are likely to be
+the same as the prior distribution. For intermediate $N_{IF} = 10$, although
+Test 2 rejects the null hypothesis, Test 3 indicates that the posterior
+distribution can be still viewed as independent Rayleigh fading channels and
+CSCG noises. A closer look at the parameter estimation reveals that 
+the posterior noise power is almost the same as the prior one. Also, the
+posterior Rayleigh channel has smaller power than does the prior channels. This
+gap in channel power is larger for $h_1$ than for $g_2$, and becomes smaller for
+larger $m$. Finally, when $N_{IF} = 1$, despite the rejection of MVN hypothesis
+so that Test 2 and Test 3 are meaningless, the ML estimation in
+Eq.~\eqref{eq:beta_sigma_ml} still serves as the empirical variance of the
+fading channel and the noises. The noise power is still almost the same as the
+prior distribution, while the channel power is much smaller than the prior one.
+
+\begin{table}[!t]
+  \renewcommand{\arraystretch}{1.3}
+  \caption{Test 1: MVN tests. The $p$-values
+  correponding to rejected null hypotheses ($p < 0.01$) are colored red.}
+  \label{tab:test1}
+  \centering
+  \begin{tabular}{c|cc|c|c|cc|c|c}
+    \hline
+    \multirow{2}{*}{Dataset}  & \multicolumn{4}{c|}{Failed sessions} &
+    \multicolumn{4}{c}{Successful sessions} \\
+    \cline{2-9}
+    & Mardia-skew & Mardia-kurt & HZ & Royston & Mardia-skew & Mardia-kurt & HZ
+    & Royston \\
+    \hline
+    1 &  &  &  &  &  &  &  &  \\
+    2 &  &  &  &  &  &  &  & \\
+    3 &  &  &  &  &  &  &  & \\
+    4 &  &  &  &  &  &  &  & \\
+    \hline
+    5 &  &  &  &  &  &  &  & \\
+    6 &  &  &  &  &  &  &  & \\
+    7 &  &  &  &  &  &  &  & \\
+    8 &  &  &  &  &  &  &  & \\
+    \hline
+    9 &  &  &  &  &  &  &  & \\
+    10 &  &  &  &  &  &  &  & \\
+    11 &  &  &  &  &  &  &  & \\
+    12 &  &  &  &  &  &  &  & \\
+    \hline
+    13 &  &  &  &  &  &  &  & \\
+    14 &  &  &  &  &  &  &  & \\
+    15 &  &  &  &  &  &  &  & \\
+    16 &  &  &  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+\end{table}
+  
+\begin{table}[!t]
+  \renewcommand{\arraystretch}{1.3}
+  \caption{Test 2 and Test 3, parameter matching tests (exact and relaxed).
+  The $p$-values correponding to rejected null hypotheses ($p < 0.01$) are
+  colored red.}
+  \label{tab:test23}
+  \centering
+  \begin{tabular}{c|c|c|c|c}
+    \hline
+    \multirow{2}{*}{Dataset} &  \multicolumn{2}{c|}{Failed sessions} &
+    \multicolumn{2}{c}{Successful sessions} \\
+    \cline{2-5}
+    & Test 2 & Test 3 & Test 2 & Test 3 \\
+    \hline
+    1 & & & & \\
+    2 & & & & \\
+    3 & & & & \\
+    4 & & & & \\
+    \hline
+    5 & & & & \\
+    6 & & & & \\
+    7 & & & & \\
+    8 & & & & \\
+    \hline
+    9 & & & & \\
+    10 & & & & \\
+    11 & & & & \\
+    12 & & & & \\
+    \hline
+    13 & & & & \\
+    14 & & & & \\
+    15 & & & & \\
+    16 & & & & \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[!t]
+  \renewcommand{\arraystretch}{1.3}
+  \caption{The ML estimation of the parameters of Rician channel and CSCG
+  noise from Test 3.}
+  \label{tab:ML}
+  \centering
+  \begin{tabular}{c|cccc|cccc}
+    \hline
+    \multirow{2}{*}{Dataset}  & \multicolumn{4}{c|}{Failed sessions} &
+    \multicolumn{4}{c}{Successful sessions} \\
+    \cline{2-9}
+    & $\hat{\sigma}^2$ & $\hat{K}$ & $\hat{\beta}$ & $\hat{\theta}^2$ &
+    $\hat{\sigma}^2$ & $\hat{K}$ & $\hat{\beta}$ & $\hat{\theta}^2$ \\
+    \hline
+    1 &  &  &  &  &  &  &  &  \\
+    2 &  &  &  &  &  &  &  & \\
+    3 &  &  &  &  &  &  &  & \\
+    4 &  &  &  &  &  &  &  & \\
+    \hline
+    5 &  &  &  &  &  &  &  & \\
+    6 &  &  &  &  &  &  &  & \\
+    7 &  &  &  &  &  &  &  & \\
+    8 &  &  &  &  &  &  &  & \\
+    \hline
+    9 &  &  &  &  &  &  &  & \\
+    10 &  &  &  &  &  &  &  & \\
+    11 &  &  &  &  &  &  &  & \\
+    12 &  &  &  &  &  &  &  & \\
+    \hline
+    13 &  &  &  &  &  &  &  & \\
+    14 &  &  &  &  &  &  &  & \\
+    15 &  &  &  &  &  &  &  & \\
+    16 &  &  &  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+\end{table}
+  
+\subsection{The Impact of Parameter Mismatch on MoDiv Design}
+For the intermediate $N_{IF} = 10$, the hypothesis tests results suggest that
+the difference between the posterior and prior distribution can be viewed
+merely as a parameter mismatch and the main difference is on the channel power
+$\beta$. As an example of how this parameter will affect certain type of
+application, we consider the Modulation Diversity (MoDiv) desgin problem
+in~\cite{}\cite{}. we compare the MoDiv design based on prior distribution
+($\beta = 1$) and that based on a ``virtual'' posterior distribution
+($\beta = ???$), and compare their actual BER performance over
+the posterior distribution. The simulation results are shown in Fig.~\ref{fig:mismatch}.
+Despite that the gap in power between the two distributions is larger than
+suggested by Table~\ref{tab:test23}, there is hardly any difference in BER
+performance, suggesting that MoDiv design is robust against the minor
+difference between the posterior and prior distribution.
+
+\begin{figure}[htb]
+  \begin{minipage}[b]{.48\linewidth}
+    \centering
+    \centerline{\includegraphics[width=7cm]{./figs/BER_noise_power_mismatch_MonteCarlo_64QAM_23.eps}}
+    \centerline{(a) $m=1,2$}\medskip
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\linewidth}
+    \centering
+    \centerline{\includegraphics[width=7cm]{./figs/BER_noise_power_mismatch_MonteCarlo_64QAM_45.eps}}
+    \centerline{(b) $m=3,4$}\medskip
+  \end{minipage}
+  \caption{The Monte-Carlo simulated uncoded BER for different $m$.
+  QAPM$m$ represents the MoDiv design based on prior distribution but tested on
+  the posterior distribution, while QAP$m$ represents the MoDiv design and
+  tested on the posterior distribution.}
+  \label{fig:mismatch}
+\end{figure}
+
+\subsection{Remarks}
+These numerical results demonstrate that, except when $N_{IF}$ is very small,
+the posterior distribution conditioned on the failure of all previous HARQ
+transmissions is not so different from the prior distribution, or this
+difference is too trivial to affect certain type of applications. 
+In many existing works on HARQ, no assumption on $N_{IF}$ or the coherence
+interval is made except that the channels are independent across
+retransmissions, and no FEC/CRC scheme or transport block structure is
+specified. Attempt to use the posterior distribution is likely to be unfounded.
+On the other hand, when we introduce more general, practical assumptions to the
+HARQ systems being studied, it is usually difficult, if not impossible, to
+derive the posterior distribution.
+
+\section{Conclusion}
+\label{sec:conclusion}
+This work investigates the posterior fading channel and noise distribution in
+a HARQ system conditioned on the HARQ feedbacks. We design three hypothesis tests,
+demonstrating with channel and noise samples generated from a practical
+LDPC-coded HARQ system that, unless the coherence interval is large or the
+number of independent fading instances per TB is small, the posterior distribution is
+not so different from the prior distribution, or the difference is so small that
+it has negligible effect on certain type of applications. To some extend, this
+work justifies the seemingly lax use of prior distribution in many existing
+works about HARQ.
+
+\appendix[Proof for Propostion~\ref{prop:test2} and Propostion~\ref{prop:test3}]
+\label{append:proof}
+The proof is simply an adoption of Wilks's theorem~\cite{wilks1938large}. The
+log-likelihood of observing $\mathbf{X}$ under MVN distribution
+$\mathcal{N}(\bm{\mu}, \mathbf{\Sigma})$ is
+\begin{align}
+  \ln(L(\bm{\mu}, \mathbf{\Sigma}|\mathbf{X})) =
+  -\frac{n}{2}\ln|\mathbf{\Sigma}|-
+  \frac{1}{2}\mbox{tr}(\mathbf{\Sigma}^{-1}(\mathbf{X}
+  -\bm{\mu}\mathbf{1}_n^H)(\mathbf{X} -\bm{\mu}\mathbf{1}_n^H)^H) + C  
+\end{align}
+where $C$ is a constant. The parameter space $\Theta = \{(\bm{\mu},
+\mathbf{\Sigma})\}$ has a dimension of $2(m+1)(4m+7)$. Its supremum
+\begin{align}
+  \sup \{\ln(L(\bm{\mu}, \mathbf{\Sigma}|\mathbf{X}))\} & =
+  \ln(L(\hat{\bm{\mu}}, \hat{\mathbf{\Sigma}}|\mathbf{X})) \notag\\
+  & -\frac{n}{2}\ln|\hat{\mathbf{\Sigma}}| - 2n(m+1) + C
+\end{align}
+where $\hat{\bm{\mu}}, \hat{\mathbf{\Sigma}}$ are defined in
+Eq.~(\ref{eq:sigma_mu_ml}).
+
+Under the null hypothesis of Test 2, the parameter space $\Theta_0^{(T2)}$ has 0
+dimensionality, the supremum of log-likelihood is
+\begin{align}
+  & \sup \{\ln(L(\bm{\mu}, \mathbf{\Sigma}|\mathbf{X})):\,(\bm{\mu},
+  \mathbf{\Sigma})\in \Theta_0^{(T2)}\} \notag \\
+  = & \ln(L(\bm{\mu}_0,
+  \mathbf{\Sigma}_0|\mathbf{X})) \notag \\
+  = & -n(m+1)
+  \ln\left(\frac{\beta \sigma^2}{4(K+1)}\right) -
+  \frac{(K+1)(\|\mathbf{X}_{h,R}\|_F^2 + \|\mathbf{X}_{h,I}\|_F^2)}{\beta} -
+  \frac{\|\mathbf{X}_{n,R}\|_F^2 + \|\mathbf{X}_{n,I}\|_F^2}{\sigma^2}
+  + C
+\end{align}
+therefore according to Wilks's therorm, as $n\rightarrow\infty$ 
+\begin{align}
+  -2\ln(\Lambda_2) &= 2\left(\sup \{\ln(L(\bm{\mu},
+  \mathbf{\Sigma}|\mathbf{X}))\} - \sup \{\ln(L(\bm{\mu}, \mathbf{\Sigma}|\mathbf{X})):\,(\bm{\mu},
+  \mathbf{\Sigma})\in \Theta_0^{(T2)}\}\right) \notag \\
+  &\sim \chi_{2(m+1)(4m+7)}^2
+\end{align}
+
+Under the null hypothesis of Test 3, the parameter space $\Theta_0^{(T3)}$ still
+has a dimensionality of 4, the supremum of log-likelihood is
+\begin{align}
+  & \sup \{\ln(L(\bm{\mu}, \mathbf{\Sigma}|\mathbf{X})):\,(\bm{\mu},
+  \mathbf{\Sigma})\in \Theta_0^{(T3)}\} \notag \\
+  = & \ln(L(\hat{\bm{\mu}}_0,
+  \hat{\mathbf{\Sigma}}_0|\mathbf{X})) \notag \\
+  = & -n(m+1)\ln\left(\frac{\hat{\beta} \hat{\sigma}^2} {4(\hat{K}+1)}\right) -
+    2n(m+1) + C
+\end{align}
+where $\hat{\bm{\mu}}_0 $, $\hat{\mathbf{\Sigma}}_0 $ are defined as in
+Eq.~\eqref{eq:mu0Sigma0} with $\sigma^2$, $K$, $\beta$, $\theta$ replaced by
+the ML estimation $\hat{\sigma}^2$, $\hat{K}$,
+$\hat{\beta}$, $\hat{\theta}$, respectively. Similar to the case of Test 2,
+as $n\rightarrow\infty$
+\begin{align}
+  -2\ln(\Lambda_3) &= 2\left(\sup \{\ln(L(\bm{\mu},
+  \mathbf{\Sigma}|\mathbf{X}))\} - \sup \{\ln(L(\bm{\mu}, \mathbf{\Sigma}|\mathbf{X})):\,(\bm{\mu},
+  \mathbf{\Sigma})\in \Theta_0^{(T3)}\}\right) \notag \\
+  &\sim \chi_{2(m+1)(4m+7) - 4}^2
+\end{align}
+\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliography{IEEEabrv,./refs.bib}
+
+
+% that's all folks
+\end{document}
+
