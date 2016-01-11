@@ -34,28 +34,29 @@ addpath('functions');
 
 % Rician fading (K = 1)
 % 64QAM
-load('./Test_201615105053572.mat'); 
+% load('./Test_201615105053572.mat'); % MoDiv
+load('./Test_2016110134945306.mat'); % Gray
 % Non-block fading
-n_df = 2400 / 6;
-dB_inv_sigma2 = -5.05; % 8.8, 1, -2.85, -5.05
-N = 4; % 1, 2, 3, 4
-max_frame = 50;
+% n_df = 2400 / 6;
+% dB_inv_sigma2 = 0.7355; % 8.8, 4.45, 2.33, 0.7355
+% N = 4; % 1, 2, 3, 4
+% max_frame = 50;
 
 % pure block fading
-% n_df = 1;
-% dB_inv_sigma2 = -5.2; % 8.3, 0.6, -3.2, -5.2
-% N = 4; % 1, 2, 3, 4
-% max_frame = 20000;
+n_df = 1;
+dB_inv_sigma2 = 0.65; % 7.35, 3.9, 1.9, 0.65
+N = 4; % 1, 2, 3, 4
+max_frame = 20000;
 
 % 100 RB
 % n_df = 100;
-% dB_inv_sigma2 = -4.7; % 9.4, 1.6, -2.5, -4.7
+% dB_inv_sigma2 = 0.76; % 8.68, 4.42, 2.235, 0.76
 % N = 4; % 1, 2, 3, 4
 % max_frame = 200;
 
 % 10 RB
 % n_df = 10;
-% dB_inv_sigma2 = -4.7; % 9.2, 1.5, -2.5, -4.7
+% dB_inv_sigma2 = 0.75; % 8.7, 4.3, 2.18, 0.75
 % N = 4; % 1, 2, 3, 4
 % max_frame = 2000;
 
@@ -95,7 +96,7 @@ points_success_noise = [real(v_success), imag(v_success)];
 points_failure_noise = [real(v_failure), imag(v_failure)];
 
 % The covariance plot of the channel samples
-colormap('hot');
+%colormap('hot');
 
 cov_success_channel = cov(points_success_channel);
 cov_failure_channel = cov(points_failure_channel);
