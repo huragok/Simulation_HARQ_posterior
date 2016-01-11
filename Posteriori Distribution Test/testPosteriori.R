@@ -2,7 +2,11 @@ library(MVN)
 library(XML)
 
 # The filenames of the datasets
-filenames <- c("samples_1_400.xml", "samples_2_400.xml", "samples_3_400.xml", "samples_4_400.xml")
+filenames <- c("samples_1_400.xml", "samples_2_400.xml", "samples_3_400.xml", "samples_4_400.xml",
+               "samples_1_100.xml", "samples_2_100.xml", "samples_3_100.xml", "samples_4_100.xml",
+               "samples_1_10.xml", "samples_2_10.xml", "samples_3_10.xml", "samples_4_10.xml",
+               "samples_1_1.xml", "samples_2_1.xml", "samples_3_1.xml", "samples_4_1.xml")
+
 filename.output.settings <- "settings.csv"
 filename.output.results.failure <- "results_failure.csv"
 filename.output.results.success <- "results_success.csv"

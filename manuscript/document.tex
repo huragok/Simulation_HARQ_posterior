@@ -485,7 +485,7 @@ Similar to Proposition~\ref{prop:test2}, the following proposition reduces Test
 \label{sec:numerical}
 
 \subsection{Simulation Settings}
-In our simulation, the Rician channel is specified with $\beta = 1$, $K = 1$ and
+In our simulation, the Rician channel is specified with $\beta = 8$, $K = 1$ and
 $\theta = 0$. Each LDPC code word of length $L=2400$ is mapped to 64-QAM
 constellation with the same Gray mapping for all (re)transmissions, therefore
 each TB consists of $L_s = 400$ symbols. The posterior fading channel and noise
@@ -505,25 +505,25 @@ Table~\ref{tab:settings}.
     \hline
     Dataset & $N_{IF}$ & $m$ & $n_{F}$ & $n_{S}$ & $\sigma^2$ \\
     \hline
-    1 & 400 & 0 &  & & \\
-    2 & 400 & 1 &  & & \\
-    3 & 400 & 2 &  & & \\
-    4 & 400 & 3 &  & & \\
+    1 & 400 & 0 & 10000 & 10000 & 0.13183 \\
+    2 & 400 & 1 & 9600  & 10400 & 0.35892 \\
+    3 & 400 & 2 & 9600 & 10400 & 0.58479 \\
+    4 & 400 & 3 & 9600 & 10400 & 0.84421 \\
     \hline
-    5 & 100 & 0 &  & & \\
-    6 & 100 & 1 &  & & \\
-    7 & 100 & 2 &  & & \\
-    8 & 100 & 3 &  & & \\
+    5 & 100 & 0 & 10100 & 9900 & 0.13552 \\
+    6 & 100 & 1 & 10300 & 9700 & 0.37154 \\
+    7 & 100 & 2 & 10100 & 9900 & 0.59772 \\
+    8 & 100 & 3 & 10200 & 9800 & 0.83946 \\
     \hline
-    9 & 10 & 0 &  & & \\
-    10 & 10 & 1 &  & & \\
-    11 & 10 & 2 &  & & \\
-    12 & 10 & 3 &  & & \\
+    9 & 10 & 0 & 10240 & 9760 & 0.13804 \\
+    10 & 10 & 1 & 9980 & 10020 & 0.37154 \\
+    11 & 10 & 2 & 9970 & 10030 & 0.60534 \\
+    12 & 10 & 3 & 10200 & 9800 & 0.84140 \\
     \hline
-    13 & 1 & 0 & & & \\
-    14 & 1 & 1 & & & \\
-    15 & 1 & 2 & & & \\
-    16 & 1 & 3 & & & \\
+    13 & 1 & 0 & 10232 & 9768 & 0.18408 \\
+    14 & 1 & 1 & 9834 & 10166 & 0.40738 \\
+    15 & 1 & 2 & 9915 & 10085 & 0.64565 \\
+    16 & 1 & 3 & 9628 & 10372 & 0.86099 \\
     \hline
   \end{tabular}
 \end{table}
@@ -533,8 +533,10 @@ The $p$-values of Test 1 over all dataset are shown in Table~\ref{tab:test1}.
 For $N_{IF} = 1$, the posterior distribution indeed appears to be of different
 type from the prior distribution. However, for $N_{IF} = 10, 100, 400$, there is
 strong evidence indicating that the fading channels and noises still follow MVN
-distribution, this is especially true for larger $N_{IF}$ (100, 400) where all
-the three MVN tests support the null hypothesis.
+distribution. This is especially true for larger $N_{IF}$ (100, 400) where all
+the three MVN tests support the null hypothesis, and for the failed sessionss
+in which we are more interested since they are supposed to be used in the
+posterior analysis.
 
 The $p$-values of Test 2 and Test 3 are shown in Table~\ref{tab:test23}. We
 also listed the ML estimation results $\hat{\sigma}^2, \hat{K},
@@ -542,17 +544,20 @@ also listed the ML estimation results $\hat{\sigma}^2, \hat{K},
 with the prior parameters given in Table~\ref{tab:settings}. As we can see, for larger $N_{IF}$
  (100, 400), Test 2 suggests that the posterior distribution are likely to be
 the same as the prior distribution. For intermediate $N_{IF} = 10$, although
-Test 2 rejects the null hypothesis, Test 3 indicates that the posterior
-distribution can be still viewed as independent Rayleigh fading channels and
-CSCG noises. A closer look at the parameter estimation reveals that 
-the posterior noise power is almost the same as the prior one. Also, the
-posterior Rayleigh channel has smaller power than does the prior channels. This
-gap in channel power is larger for $h_1$ than for $g_2$, and becomes smaller for
-larger $m$. Finally, when $N_{IF} = 1$, despite the rejection of MVN hypothesis
-so that Test 2 and Test 3 are meaningless, the ML estimation in
-Eq.~\eqref{eq:beta_sigma_ml} still serves as the empirical variance of the
-fading channel and the noises. The noise power is still almost the same as the
-prior distribution, while the channel power is much smaller than the prior one.
+Test 2 rejects the null hypothesis, in 3 of the 4 failed sessions Test 3
+indicates that the posterior distribution can be still viewed as independent Rician fading
+channels and CSCG noises. A closer look at the parameter estimation reveals that 
+the posterior $\hat{\beta}$ and $\hat{\theta}$ are almost the same as the prior
+ones. However, the posterior Rician channel has smaller $\hat{\beta}$ and
+$\hat{K}$ for the failed sessions, and larger ones for the successul sessions,
+as compared to the prior parameters.
+In general, this gap increases as $N_IF$ and $m$ decreases. Finally, when
+$N_{IF} = 1$, despite the rejection of MVN hypothesis so that Test 2 and Test 3
+are meaningless, the ML estimation in Eq.~\eqref{eq:beta_sigma_ml} still serves
+as the empirical mean square of the fading channel and the noises. The noise
+power is still almost the same as the prior distribution, while the channel
+power is much smaller and much larger for the failed and successful
+sessions, respectively, than the prior one.
 
 \begin{table}[!t]
   \renewcommand{\arraystretch}{1.3}
@@ -568,25 +573,58 @@ prior distribution, while the channel power is much smaller than the prior one.
     & Mardia-skew & Mardia-kurt & HZ & Royston & Mardia-skew & Mardia-kurt & HZ
     & Royston \\
     \hline
-    1 &  &  &  &  &  &  &  &  \\
-    2 &  &  &  &  &  &  &  & \\
-    3 &  &  &  &  &  &  &  & \\
-    4 &  &  &  &  &  &  &  & \\
+    1 & 0.03707 & 0.5945 & 0.1044 &
+    0.09758 & 0.3086 & 0.3285 & 0.1810 &
+    0.5405
+    \\
+    2 & 0.2869 & 0.6188 & 0.9854 &
+    0.2496 & 0.7373 & 0.7304 & 0.8650 &
+    0.2439
+    \\
+    3 & 0.7019 & 0.05709 & 0.9187 &
+    0.4361 & 0.7523 & 0.1693 & 0.7661 &
+    0.1821
+    \\
+    4 & 0.7590 & 0.7925 & 0.5395 &
+    0.2098 & 0.6935 & 0.4394 & 0.9345 & 0.8580
+    \\
     \hline
-    5 &  &  &  &  &  &  &  & \\
-    6 &  &  &  &  &  &  &  & \\
-    7 &  &  &  &  &  &  &  & \\
-    8 &  &  &  &  &  &  &  & \\
+    5 & 0.2720 & 0.1313 & 0.2117 &
+    0.9635 & 0.6373 & 0.7678 & 0.1052 & 0.1444
+    \\
+    6 & 0.8645 & 0.2425 & 0.4166 &
+    0.7259 & 0.5645 & 0.7191 & 0.1495 &
+    0.9247 \\
+    7 & 0.6248 & 0.9021 & 0.9473 &
+    0.4020 & 0.1583 & 0.7446 & 0.4879 &
+    0.8501
+    \\
+    8 & 0.1308 & 0.7417 & 0.8127 &
+    0.1612 & 0.9160 & 0.5376 & 0.3666 &
+    0.3905 \\
     \hline
-    9 &  &  &  &  &  &  &  & \\
-    10 &  &  &  &  &  &  &  & \\
-    11 &  &  &  &  &  &  &  & \\
-    12 &  &  &  &  &  &  &  & \\
+    9 & \tred{6.172e-10} & 0.02679 & \tred{8.639e-13} &
+    0.01571 & \tred{7.459e-20} & 0.04260 & \tred{6.661e-16} & \tred{2.562e-4} \\
+    10 & \tred{9.934e-4} & 0.3654 & 0.01845 &
+    0.02896 & \tred{7.720e-8} & 0.8683 & \tred{2.494e-4} & 0.01850 \\
+    11 & 0.3692 & 0.03412 & 0.4131 &
+    0.7423 & 0.1039 & 0.1747 & 0.5589 &
+    0.8595 \\
+    12 & 0.6141 & 0.9034 & 0.7274 &
+    0.04015 & 0.8693 & 0.1940 & 0.6021 &
+    0.4035
+    \\
     \hline
-    13 &  &  &  &  &  &  &  & \\
-    14 &  &  &  &  &  &  &  & \\
-    15 &  &  &  &  &  &  &  & \\
-    16 &  &  &  &  &  &  &  & \\
+    13 & \tred{1.414e-229} & \tred{9.191e-6} & \tred{0} & \tred{2.753e-27} &
+    \tred{0} & \tred{0} & \tred{0} & \tred{1.646e-22} \\
+    14 & \tred{5.118e-236} & \tred{4.239e-8} & \tred{0} & \tred{2.613e-22} &
+    \tred{5.620e-269} & \tred{1.800e-7} & \tred{0} & \tred{3.049e-12}
+    \\
+    15 & \tred{5.052e-156} & \tred{6.174e-10} & \tred{0} & \tred{2.596e-14} &
+    \tred{3.303e-243} & 0.01597 & \tred{0} & \tred{3.497e-10}
+    \\
+    16 & \tred{3.235e-131} & \tred{3.478e-10} & \tred{0} & \tred{2.356e-13} &
+    \tred{2.006e-173} & 0.9775 & \tred{0} & \tred{1.130e-6} \\
     \hline
   \end{tabular}
 \end{table}
@@ -605,25 +643,25 @@ prior distribution, while the channel power is much smaller than the prior one.
     \cline{2-5}
     & Test 2 & Test 3 & Test 2 & Test 3 \\
     \hline
-    1 & & & & \\
-    2 & & & & \\
-    3 & & & & \\
-    4 & & & & \\
+    1 & 0.1350 & 0.2781 & 0.04330 & 0.3123 \\
+    2 & 0.1614 & 0.5014 & 0.9206 & 0.9258 \\
+    3 & 0.1125 & 0.1436 & 0.1333 & 0.2081 \\
+    4 & 0.4806 & 0.4941 & 0.9758 & 0.9734 \\
     \hline
-    5 & & & & \\
-    6 & & & & \\
-    7 & & & & \\
-    8 & & & & \\
+    5 & 0.01253 & 0.04575 & \tred{1.358e-11} & \tred{7.713e-3} \\
+    6 & 0.06204 & 0.3005 & 0.02778 & 0.6205 \\
+    7 & 0.2207 & 0.6941 & 0.3504 & 0.7882 \\
+    8 & 0.4434 & 0.9241 & 0.01312 & 0.2772 \\
     \hline
-    9 & & & & \\
-    10 & & & & \\
-    11 & & & & \\
-    12 & & & & \\
+    9 & \tred{0} & \tred{5.236e-4} & \tred{0} & \tred{6.890e-10} \\
+    10 & \tred{0} & 0.02033 & \tred{0} & \tred{1.264e-5} \\
+    11 & \tred{0} & 0.3848 & \tred{0} & \tred{6.695e-8} \\
+    12 & \tred{0} & 0.3573 & \tred{0} & \tred{6.697e-3} \\
     \hline
-    13 & & & & \\
-    14 & & & & \\
-    15 & & & & \\
-    16 & & & & \\
+    13 & \tred{0} & \tred{0} & \tred{0} & \tred{0} \\
+    14 & \tred{0} & \tred{0} & \tred{0} & \tred{0} \\
+    15 & \tred{0} & \tred{0} & \tred{0} & \tred{0} \\
+    16 & \tred{0} & \tred{0} & \tred{0} & \tred{0} \\
     \hline
   \end{tabular}
 \end{table}
@@ -639,28 +677,52 @@ prior distribution, while the channel power is much smaller than the prior one.
     \multirow{2}{*}{Dataset}  & \multicolumn{4}{c|}{Failed sessions} &
     \multicolumn{4}{c}{Successful sessions} \\
     \cline{2-9}
-    & $\hat{\sigma}^2$ & $\hat{K}$ & $\hat{\beta}$ & $\hat{\theta}^2$ &
-    $\hat{\sigma}^2$ & $\hat{K}$ & $\hat{\beta}$ & $\hat{\theta}^2$ \\
+    & $\hat{\beta}$ & $\hat{K}$ & $\hat{\theta}$ & $\hat{\sigma}^2$
+    & $\hat{\beta}$ & $\hat{K}$ & $\hat{\theta}$ & $\hat{\sigma}^2$ \\
     \hline
-    1 &  &  &  &  &  &  &  &  \\
-    2 &  &  &  &  &  &  &  & \\
-    3 &  &  &  &  &  &  &  & \\
-    4 &  &  &  &  &  &  &  & \\
+    1 & 7.830 & 0.9883 & 6.391e-3 &
+    0.1330 & 8.137 & 1.015 & -9.221e-3 & 0.1284
+    \\
+    2 & 7.902 & 0.9899 & -6.634e-3 &
+    0.3664 & 8.063 & 1.017 & -2.772e-3 & 0.3572 \\
+    3 & 7.936 & 0.9920 & 4.855e-3 &
+    0.5904 & 8.027 & 1.010 & -8.987e-3 & 0.5797
+    \\
+    4 & 8.017 & 0.9954 & -6.380e-3 &
+    0.8479 & 8.011 & 1.013 & -1.333e-3 & 0.8468 \\
     \hline
-    5 &  &  &  &  &  &  &  & \\
-    6 &  &  &  &  &  &  &  & \\
-    7 &  &  &  &  &  &  &  & \\
-    8 &  &  &  &  &  &  &  & \\
+    5 & 7.831 & 0.9793 & 1.878e-3 &
+    0.1381 & 8.505 & 1.078 & -3.657e-3 & 0.1336
+    \\
+    6 & 7.827 & 0.9952 & -4.889e-3
+    & 0.3733  & 8.232 & 1.017 & -0.01006 & 0.3683
+    \\
+    7 & 7.854 & 0.9692 & -3.902e-3 &
+    0.6032 & 8.158 & 1.022 & -7.301e-3 & 0.5987
+    \\
+    8 & 7.822 & 0.9765 & -3.594e-3 &
+    0.8413 & 8.194 & 1.035 & 2.162e-4 & 0.8369 \\
     \hline
-    9 &  &  &  &  &  &  &  & \\
-    10 &  &  &  &  &  &  &  & \\
-    11 &  &  &  &  &  &  &  & \\
-    12 &  &  &  &  &  &  &  & \\
+    9 & 6.760 & 0.8111 & -3.474e-3 &
+    0.1418 & 9.262 & 1.261 & 4.441e-3 & 0.1373
+    \\
+    10 & 6.965 & 0.8721 & -3.151e-3 &
+    0.3726 & 9.046 & 1.142 & 6.379e-3 & 0.3740
+    \\
+    11 & 7.105 & 0.8999 & -2.120e-3 &
+    0.6079 & 8.936 & 1.118 & 1.622e-3 & 0.6039 \\
+    12 & 7.240 & 0.9198 & 4.991e-4 &
+    0.8442 & 8.758 & 1.078 & 6.637e-3 & 0.8363 \\
     \hline
-    13 &  &  &  &  &  &  &  & \\
-    14 &  &  &  &  &  &  &  & \\
-    15 &  &  &  &  &  &  &  & \\
-    16 &  &  &  &  &  &  &  & \\
+    13 & 2.958 & 0.6028 & 0.01418 &
+    0.1860 & 13.20 & 2.101 & -5.829e-3 & 0.1876
+    \\
+    14 & 4.206 & 0.7147 & -5.320e-3 &
+    0.4027 & 11.67 & 1.522 & -2.713e-3 & 0.4038 \\
+    15 & 4.911 & 0.7668 & -3.975e-4 &
+    0.6421 & 11.06 & 1.381 & 2.002e-3 & 0.6428 \\
+    16 & 5.247 & 0.7996 & 1.944e-3 &
+    0.8598 & 10.56 & 1.305 & -2.141e-3 & 0.8551 \\
     \hline
   \end{tabular}
 \end{table}
@@ -668,13 +730,15 @@ prior distribution, while the channel power is much smaller than the prior one.
 \subsection{The Impact of Parameter Mismatch on MoDiv Design}
 For the intermediate $N_{IF} = 10$, the hypothesis tests results suggest that
 the difference between the posterior and prior distribution can be viewed
-merely as a parameter mismatch and the main difference is on the channel power
-$\beta$. As an example of how this parameter will affect certain type of
-application, we consider the Modulation Diversity (MoDiv) desgin problem
-in~\cite{}\cite{}. we compare the MoDiv design based on prior distribution
-($\beta = 1$) and that based on a ``virtual'' posterior distribution
-($\beta = ???$), and compare their actual BER performance over
-the posterior distribution. The simulation results are shown in Fig.~\ref{fig:mismatch}.
+mostly as a parameter mismatch and the main difference is on the channel power
+$\beta$ and Rician factor $K$. As an example of how this parameter will affect
+certain type of application, we consider the Modulation Diversity (MoDiv) desgin
+problem in~\cite{wu2015modulation}\cite{harvind2005symbol}. we compare the
+MoDiv design based on prior distribution ($\beta = 8$ and $K = 1$) and that
+based on an artificial posterior distribution for the failed sessions ($\beta =
+6.5$ and $K = 0.8$), and compare their actual BER performance over the
+artificial posterior distribution.
+The simulation results are shown in Fig.~\ref{fig:mismatch}.
 Despite that the gap in power between the two distributions is larger than
 suggested by Table~\ref{tab:test23}, there is hardly any difference in BER
 performance, suggesting that MoDiv design is robust against the minor
