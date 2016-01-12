@@ -13,14 +13,14 @@ type_mod = 'QAM';
 
 % Now we are considering a one hop link (S-D)
 
-dB_inv_sigma2 = [0]; % 1/sigma2 in dB
-d = 0.5; % Distance between S and R, R and D
+dB_inv_sigma2 = [0 : 2 : 16]; % 1/sigma2 in dB
+d = 6.5 ^ (-1 / 3); % Distance between S and R, R and D
 
-K = 1; % The Rician coefficients
+K = 0.8; % The Rician coefficients
 theta = 0; % The phase of the LOS component
 
 nu = 3; % Pathloss factor
-M = 5; % Number of retransmission
+M = 3; % Number of retransmission
 
 epsilon = 0.01; % Tolerance to control the error of scaling the 2 cost matrices to integer
 n_itr = 1000000; % Number of iterations for the tabu QAP solver
