@@ -102,7 +102,7 @@
 % in the abstract or keywords.
 \begin{abstract}
   In response to a comment on one of our manuscript, this work studies the
-  posteior channel and noise distributions conditioned on the NACKs and ACKs of
+  posterior channel and noise distributions conditioned on the NACKs and ACKs of
   all previous transmissions in HARQ system with statistical approaches. Our main
   result is that, unless the coherence interval (time or frequency) is large as
   in block-fading assumption, the posterior distribution of the channel and
@@ -198,7 +198,7 @@ One apparent reason why posterior distribution is not preferable is
 infeasibility, as a posterior analysis for HARQ system is usually too difficult
 unless one rely on some very restrictive, less practical settings and assumptions. For instance, \cite{gu2006modeling} characterize the failure of
 transmissions with effective SNR and rate criteria, which on its own is a
-simplication and only numerical results are presented. Considering PAM
+simplification and only numerical results are presented. Considering PAM
 constellations and maximum ratio combining (MRC),
 \cite{long2012analysis}\cite{alkurd2015modeling} attempts to explicitly
 formulate the error probability. However, the error probability based on $Q$
@@ -354,7 +354,7 @@ The first test is literally defined as:
 Here we do not make any assumptions on the mean and covariance matrix of
 $\mathbf{x}$. As there are a wide variety of MVN tests with different
 characteristics~\cite{mecklin2005monte} which may well reach contradictory
-conslusions over a same dataset, we adopt the the R package
+conclusions over a same dataset, we adopt the the R package
 `MVN'~\cite{korkmaz2014mvn} which implements three popular MVN tests,
 namely Mardia's test, Henze-Zirkler(HZ)'s test and Royston's test.
 
@@ -424,7 +424,7 @@ posterior distribution, the channels and noises across the $(m+1)$
 (re)transmissions are still i.i.d Rician fading and CSCG distributed,
 respectively, except that the parameters $\sigma^2$, $K$, $\beta$ and $\theta$
 are different from the prior distribution. In that case, we can examine the
-ML estimation of these paramters to see how different they are
+ML estimation of these parameters to see how different they are
 from the prior assumption, and whether certain applications are robust against
 this parameter mismatch between the posterior and prior distribution. This test
 is formulated as follows:
@@ -550,10 +550,11 @@ the same as the prior distribution. For intermediate $N_{IF} = 10$, although
 Test 2 rejects the null hypothesis, in 3 of the 4 failed sessions Test 3
 indicates that the posterior distribution can be still viewed as independent Rician fading
 channels and CSCG noises. A closer look at the ML estimation results
-in Table~\ref{tab:settings} reveals that the posterior $\hat{\beta}$ and
+in Table~\ref{tab:ML} reveals that the posterior $\hat{\beta}$ and
 $\hat{\theta}$ are almost the same as the prior ones. However, the posterior
 Rician channel has smaller $\hat{\beta}$ and $\hat{K}$ for the failed sessions,
-and larger ones for the successul sessions, as compared to the prior parameters.
+and larger ones for the successful sessions, as compared to the prior
+parameters.
 In general, this gap increases as $N_{IF}$ and $m$ decreases. Finally, when
 $N_{IF} = 1$, despite the rejection of MVN hypothesis so that Test 2 and Test 3
 are meaningless, the ML estimation in Eq.~\eqref{eq:beta_sigma_ml} still serves
@@ -735,7 +736,7 @@ For the intermediate $N_{IF} = 10$, the hypothesis tests results suggest that
 the difference between the posterior and prior distribution can be viewed
 mostly as a parameter mismatch and the main difference is on the channel power
 $\beta$ and Rician factor $K$. As an example of how this parameter will affect
-certain type of application, we consider the Modulation Diversity (MoDiv) desgin
+certain type of application, we consider the Modulation Diversity (MoDiv) design
 problem in~\cite{wu2015modulation}\cite{harvind2005symbol}. we compare the
 MoDiv design based on prior distribution ($\beta = 8$ and $K = 1$) and that
 based on an artificial posterior distribution for the failed sessions ($\beta =
@@ -795,7 +796,7 @@ works about HARQ.
 \appendix[Proof for Proposition~\ref{prop:test2} and
 Proposition~\ref{prop:test3}]
 \label{append:proof}
-The proof is simply an adoption of Wilks's theorem~\cite{wilks1938large}. The
+The proof is simply an adoption of Wilks' theorem~\cite{wilks1938large}. The
 log-likelihood of observing $\mathbf{X}$ under MVN distribution
 $\mathcal{N}(\bm{\mu}, \mathbf{\Sigma})$ is
 \begin{align}
@@ -827,7 +828,7 @@ dimensionality, the supremum of log-likelihood is
   \frac{\|\mathbf{X}_{n,R}\|_F^2 + \|\mathbf{X}_{n,I}\|_F^2}{\sigma^2}
   + C
 \end{align}
-therefore according to Wilks's therorm, as $n\rightarrow\infty$ 
+therefore according to Wilks' theorem, as $n\rightarrow\infty$ 
 \begin{align}
   -2\ln(\Lambda_2) &= 2\left(\sup \{\ln(L(\bm{\mu},
   \mathbf{\Sigma}|\mathbf{X}))\} - \sup \{\ln(L(\bm{\mu}, \mathbf{\Sigma}|\mathbf{X})):\,(\bm{\mu},
