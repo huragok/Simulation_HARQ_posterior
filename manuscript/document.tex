@@ -77,7 +77,8 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{On the Impact of HARQ feedback}
+\title{Statistical Analysis of a Posteriori Channel and Noise Distribution
+Based on HARQ Feedback}
 %
 %
 % author names and IEEE memberships
@@ -138,7 +139,7 @@
 \section{Introduction}
 \label{sec:intro}
 In our recent manuscript~\cite{wu2015modulation}, we studied the Modulation
-Diversity (MoDiv) design problem for Hybrid Automatic Repeat reQuest (HARQ)
+Diversity (MoDiv) design problem based on Hybrid Automatic Repeat reQuest (HARQ)
 Chase-Combining (CC) protocol. In this work, we approximate the bit
 error rate (BER) based on prior fading channel and noise distributions after
 each round of (re)transmission. One would argue that the need for the
@@ -271,8 +272,8 @@ The Rician channel can be modeled as~\cite[(2.55)]{tse2005fundamentals}
   \sqrt{\frac{1}{K+1}}\mathcal{CN}(0,\beta)
 \end{align}
 where $K$ is the Rician factor, $\beta$ is the mean power, and $\theta$ is the
-line-of-sight (LOS) component. We also assume that $n^{(m)}$ is independent
-across different samples and $h^{(m)}$ is independent across different
+phase of the line-of-sight (LOS) component. We also assume that $n^{(m)}$ is
+independent across different samples and $h^{(m)}$ is independent across different
 (re)transmissions. Assuming all previous $m$ decoding attempt have failed,
 after the $m$-th retransmission, the receiver makes another decoding attempt by
 combining the $m + 1$ TBs received so far using a maximum likelihood (ML)
@@ -427,7 +428,7 @@ are different from the prior distribution. In that case, we can examine the
 ML estimation of these parameters to see how different they are
 from the prior assumption, and whether certain applications are robust against
 this parameter mismatch between the posterior and prior distribution. This test
-is formulated as follows:
+is formulated as follows. Assuming that $\mathbf{x}$ is MVN distributed,
 \begin{align}
   \mbox{(Test 3) } \begin{array}{ll}H_0: & \mathbf{x}\sim
   \mathcal{N}(\tilde{\bm{\mu}}_0, \tilde{\mathbf{\Sigma}}_0)

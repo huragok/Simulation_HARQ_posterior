@@ -4,8 +4,6 @@
 *.mexglx
 *.fig
 *.pdb
-*.pdf
-*.eps
 *.xml
 tmp
 *.mexw64
